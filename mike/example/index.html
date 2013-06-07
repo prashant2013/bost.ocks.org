@@ -6,9 +6,11 @@
 @import url(../style.css?20130411);
 
 .slide {
-  border-left: solid 2px #ccc;
-  padding-left: 18px;
-  margin: 2em 0 2em -20px;
+  margin: 2em 0 2em 0;
+}
+
+.slide iframe {
+  border: solid 1px #ccc;
 }
 
 </style>
@@ -20,23 +22,82 @@
 
 <h1>For Example</h1>
 
-<script src="http://d3js.org/d3.v3.min.js"></script>
-
 <p class="slide"><a href="http://bl.ocks.org/mbostock" target="_blank"><img src="montage.png" width="960" height="512"></a>
 
 <aside>This is a rough transcript of my talk on June 6, 2013 at <a href="http://eyeofestival.com/">Eyeo</a>. Words and examples have been adapted a bit for the web so may differ slightly from the talk.</aside>
 
-<p>I am a big fan of examples. Not a surprise, right? If you follow me on <a href="https://twitter.com/mbostock">Twitter</a>, if you’ve seen my projects over the last few years, if you’ve asked D3 questions on Stack Overflow, you’ve likely seen many of my example visualizations, maps and explanations.
+<p>I am a big fan of examples. Not a surprise, right? If you follow me on <a href="https://twitter.com/mbostock">Twitter</a>, or my projects over the last few years (or asked D3 questions on Stack Overflow), you’ve likely seen some of my example visualizations, maps and explanations.
 
-<p>I love examples so much I created a website just for sharing them. <a href="http://bl.ocks.org">Bl.ocks.org</a> is a quick and dirty way to post code and have a live example running permanently with a short URL. The result and the code are displayed adjacently; it’s view source by default. And it’s backed by <a href="https://gist.github.com">GitHub Gist</a>, so your examples have a git repository for version control, and are forkable, cloneable and commentable.
+<p>My love for examples is so deep that I created a website dedicated to sharing them: <a href="http://bl.ocks.org">bl.ocks.org</a> lets you quickly post code and share your example with a short URL. Your code is displayed below the example; it’s view source by default. And it’s backed by <a href="https://gist.github.com">GitHub Gist</a>, so examples have a git repository for version control, and are forkable, cloneable and commentable.
 
-<p>Initially I thought I’d just show all my examples. But with more than 600 examples, I calculated I’d have 4.5 seconds per. And (Ignite talks notwithstanding) I fear that would be a bit overwhelming. So instead I’ve picked a few favorites that I hope you enjoy. You should find this talk entertaining, even if it fails to be insightful.
+<p>I initially conceived this talk as an excuse to show all my examples. But with more than 600, I’d have only 4.5 seconds per. And that would be overwhelming. So instead I’ve picked a few favorites that I hope you’ll enjoy. You should find this talk entertaining, even if it fails to be insightful.
 
-<p>But this talk does has a point. Examples are lightweight and informal. They can be made in as little as fifteen minutes. They lack the ceremony of polished graphics or official tools. Yet they are a powerful medium of communication, capable of expressing big ideas with immediate impact. Eyeo is a unique opportunity for me to talk directly to all of you that are doing amazing things with code, data and visualization. So, <b>if I can accomplish one thing with my talk, it should be to get you to share more examples.</b> In short, to share my love of examples with you.
+<p>But this talk has a point, too. Examples are lightweight and informal. They can often be made in a few minutes. They lack the ceremony of polished graphics or official tools. Yet they are a powerful medium of communication, capable of expressing big ideas with immediate impact. And Eyeo is a unique opportunity for me to talk directly to all of you that are doing amazing things with code, data and visualization. So, <b>if I can accomplish one thing here, it should be to get you to share more examples</b>. In short, to share my love of examples with you.
 
 <h2><a href="#1" name="1">#</a>The Flawed Example</h2>
 
-<p>So let’s start with an example, shall we? This is one of my favorite examples, but it is also flawed in a way that is representative of many, making it a good candidate for dissection.
+<p>So let’s start with an example, shall we? (An example of an example; a meta-example.) This is one of my favorites, but it’s also flawed in a way that is representative, making it a good candidate for dissection and self-critique.
+
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/3795544/" width="960" height="580" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/3795544" target="_blank">bl.ocks.org/3795544</a></aside>
+
+<p>This is an example I wrote to demonstrate a new feature in D3. The <a href="https://github.com/mbostock/d3/wiki/3.0">3.0 release</a> included major improvements to our geographic projection system, work that was done with my co-author, the brilliant <a href="http://jasondavies.com">Jason Davies</a>.
+
+<p>One challenge in map projection is that input geometry—coast lines, country borders and such—are defined as polygons. When polygons are projected from the sphere to the screen, the edges may no longer be straight lines due to distortion in the projection. And the fact that edges are not straight to begin with: spherical polygon edges are great arcs, not lines. So on the left you see what happens if you represent the equator as a polyline with a point every 90°. When projected point-by-point, the line appears broken because five points are not enough to produce a smooth curve.
+
+<p>The conventional fix is to use more points. The middle diagrams shows a point every 4° of longitude. As you can see, this is better. But if you look closely you can still see artifacts on the vertical lines where the distortion is so severe that even 4° is not enough! And you can see many points along the horizontal lines where there is little distortion; these points do not improve quality, but slow down rendering. So uniform resampling is inefficient and doesn’t guarantee great results.
+
+<p>Our solution is on the right. We detect places of high curvature and introduce additional points just in those places. This gives beautiful results even in areas of high distortion, and performs well because we only add points where they are needed.
+
+<p>Now, I said this example was flawed. If I weren’t now explaining it, you could easily be scratching your head, wondering what you were looking at. Not every viewer will be sufficiently familiar with map projections to understand the problem or the proposed solution. So obviously the first step in any example is to <b>know your audience</b> and <b>communicate in a way that is accessible</b> to them.
+
+<p>So what are we looking at?
+
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5731578/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5731578" target="_blank">bl.ocks.org/5731578</a></aside>
+
+<p>…
+
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5731632/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5731632" target="_blank">bl.ocks.org/5731632</a></aside>
+
+<p>…
+
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5731693/" width="960" height="580" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5731693" target="_blank">bl.ocks.org/5731693</a></aside>
+
+<p>…
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var iframe = d3.selectAll(".slide iframe[data-src]").datum(function() {
+  return {
+    visible: false,
+    src: this.getAttribute("data-src")
+  };
+});
+
+d3.select(window)
+    .on("scroll", scrolled)
+    .on("resize", scrolled);
+
+function scrolled() {
+  var height = window.innerHeight || document.documentElement.clientHeight;
+  iframe.filter(function(d) {
+    var visible0 = d.visible, box = this.getBoundingClientRect();
+    d.visible = !(box.bottom < 0 || box.top > height);
+    return visible0 !== d.visible;
+  }).attr("src", function(d) {
+    return d.visible ? d.src : null;
+  });
+}
+
+</script>
 
 <footer>
   <aside>June 7, 2013</aside>
