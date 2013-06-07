@@ -58,19 +58,57 @@
 
 <aside><a href="http://bl.ocks.org/mbostock/5731578" target="_blank">bl.ocks.org/5731578</a></aside>
 
-<p>…
+<p>The gray lines of constant latitude and longitude, called parallels and meridians, form a graticule. The red parallel bisecting this spherical grid at 0° latitude is the equator.
 
 <p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5731632/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5731632" target="_blank">bl.ocks.org/5731632</a></aside>
 
-<p>…
+<p>Then we took the sphere and projected it down to the plane with our map projection. Specifically, the equirectangular or plate carrée projection, which is the simplest type of projection there is. Longitude runs along the <i>x</i>-axis and latitude along the <i>y</i>-axis.
 
 <p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5731693/" width="960" height="580" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5731693" target="_blank">bl.ocks.org/5731693</a></aside>
 
-<p>…
+<p>In the normal aspect of the equirectangular projection—that is, without any rotation—the equator is a straight line. But now we rotate the sphere by almost 90° along one axis. We also rotated the display by the reverse 90° so that the poles remain vertically aligned. This rotation is called a transverse aspect. So now you have a better sense of what you’re looking at.
+
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5731808/" width="960" height="580" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5731808" target="_blank">bl.ocks.org/5731808</a></aside>
+
+<p>The name of this special case of the equirectangular projection is the Cassini projection after the French cartographer and astronomer. (The grandson of the Cassini that first observed Saturn’s moons, and the Cassini division in Saturn’s rings.) There’s not much use for this projection today, as it has been largely replaced by the transverse Mercator for low-distortion maps of narrow regions.
+
+<p>None of this is relevant to understanding the example, by the way, I’m only mentioning it because the history of cartography is fascinating, and map projections are so numerous and beautiful. I used the Cassini projection in this example only because it heavily distorts the equator and it is easy to fit three of them side-by-side.
+
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5699934/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5699934" target="_blank">bl.ocks.org/5699934</a></aside>
+
+<p>OK, now that you understand the display, you can see what adaptive resampling does. But how does it work? Well, it recursively subdivides the input polygon (or polyline in this case). Each adjacent pair of points forms a great arc segment; you find the midpoint of this great arc and project it. This midpoint is shown in black. Then you measure the perpendicular distance from this midpoint to the straight line between the two projected endpoints. This is the estimation of curvature, or distortion. If the distance is large, then this edge has high curvature and it’s worthwhile to continue resampling. On the other hand if the area is small, then the projected line is approximately straight, so there’s no need for more samples. Hence the term “adaptive”: only resample where needed.
+
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5731979/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5731979" target="_blank">bl.ocks.org/5731979</a></aside>
+
+<p>Scale-dependent metric…
+
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5732029/" width="960" height="600" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5732029" target="_blank">bl.ocks.org/5732029</a></aside>
+
+<p>The resampling algorithm is in essence the reverse of the Douglas–Peucker line simplification algorithm. Rather than remove detail, we preserve detail that would be lost when projected.
+
+<p>You have much more context now, so let’s take another look.
+
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/3795544/" width="960" height="580" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/3795544" target="_blank">bl.ocks.org/3795544</a></aside>
+
+<p>Notice the clustering of points in the corners, where the equator is stretched and curved. If you are wondering, the graticules in all three views are rendered with adaptive resampling, which is why the graticule always looks good! Remember the graticule is itself a polygon. Everything is a polygon! This is done automatically as part of D3’s projection pipeline.
+
+<p>I think that’s a cool algorithm. It’s neat, right? Particularly the symmetry with line simplification. But I was so excited to tell you how cool the algorithm was, I forgot to explain why it matters. The example illustrates what the feature does, but not why the feature exists. So the example only resonates for viewers that already understand the feature’s utility. <b>If you want your example to speak to people other than yourself, you have to explain why it matters.</b>
+
+<p>So how do we address this flaw? We show applications that the feature enables. Preferrably, concrete examples that are representative of real-world usage.
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
