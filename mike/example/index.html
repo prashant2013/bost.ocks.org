@@ -71,13 +71,13 @@
 
 <aside><a href="http://bl.ocks.org/mbostock/5731693" target="_blank">bl.ocks.org/5731693</a></aside>
 
-<p>In the normal aspect of the equirectangular projection—that is, without any rotation—the equator is a straight line. But now we rotate the sphere by almost 90° along one axis. We also rotated the display by the reverse 90° so that the poles remain vertically aligned. This rotation is called a transverse aspect. So now you have a better sense of what you’re looking at.
+<p>In the normal aspect of the equirectangular projection—that is, without any rotation—the equator is a straight line. But now we rotate the sphere counterclockwise by almost 90° along one axis, while rotating the display clockwise by 90° so that the poles remain vertically aligned. This type of rotation is called a transverse aspect.
 
 <p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5731808/" width="960" height="580" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5731808" target="_blank">bl.ocks.org/5731808</a></aside>
 
-<p>The name of this special case of the equirectangular projection is the Cassini projection after the French cartographer and astronomer. (The grandson of the Cassini that first observed Saturn’s moons, and the Cassini division in Saturn’s rings.) There’s not much use for this projection today, as it has been largely replaced by the transverse Mercator for low-distortion maps of narrow regions.
+<p>This special case of the equirectangular projection has a name: the Cassini projection after the French cartographer and astronomer. (The grandson of the Cassini that first observed Saturn’s moons, and the Cassini division in Saturn’s rings.) There’s not much use for this projection today, as it has been largely replaced by the transverse Mercator for low-distortion maps of narrow regions.
 
 <p>None of this is relevant to understanding the example, by the way, I’m only mentioning it because the history of cartography is fascinating, and map projections are so numerous and beautiful. I used the Cassini projection in this example only because it heavily distorts the equator and it is easy to fit three of them side-by-side.
 
@@ -85,21 +85,25 @@
 
 <aside><a href="http://bl.ocks.org/mbostock/5699934" target="_blank">bl.ocks.org/5699934</a></aside>
 
-<p>OK, now that you understand the display, you can see what adaptive resampling does. But how does it work? Well, it recursively subdivides the input polygon (or polyline in this case). Each adjacent pair of points forms a great arc segment; you find the midpoint of this great arc and project it. This midpoint is shown in black. Then you measure the perpendicular distance from this midpoint to the straight line between the two projected endpoints. This is the estimation of curvature, or distortion. If the distance is large, then this edge has high curvature and it’s worthwhile to continue resampling. On the other hand if the area is small, then the projected line is approximately straight, so there’s no need for more samples. Hence the term “adaptive”: only resample where needed.
+<p>OK, now that you understand the display, you can see what adaptive resampling does. But how does it work?
+
+<p>The algorithm recursively subdivides the input polygon. Each adjacent pair of points forms a great arc segment. The algorithm computes the midpoint of this great arc and projects it; these midpoints are shown in black. Then it measures the perpendicular distance from the midpoint to the straight line between the two arc endpoints; these distances are shown as black lines, and provide an estimate of curvature.
+
+<p>If the perpendicular distance is large, then the edge has high curvature and it’s beneficial to resample. On the other hand if the area is small, then the projected line is approximately straight, so resampling can terminate. Hence the term “adaptive”: only resample where needed.
 
 <p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5731979/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5731979" target="_blank">bl.ocks.org/5731979</a></aside>
 
-<p>Scale-dependent metric…
+<p>One of the nice properties of this algorithm is that the curvature estimation is scale-dependent. So as you zoom in, or increase the display size, the perpendicular distances change as the curves change, and the algorithm adjusts automatically.
 
 <p class="slide"><iframe style="border:none;background:transparent;" data-src="http://bl.ocks.org/mbostock/raw/5732029/" width="960" height="600" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5732029" target="_blank">bl.ocks.org/5732029</a></aside>
 
-<p>The resampling algorithm is in essence the reverse of the Douglas–Peucker line simplification algorithm. Rather than remove detail, we preserve detail that would be lost when projected.
+<p>In essence, the resampling algorithm is the reverse of Douglas–Peucker <a href="/mike/simplify/">line simplification</a>. Rather than remove detail, it preserves detail that would be lost when projected.
 
-<p>You have much more context now, so let’s take another look.
+<p>With all that additional context, let’s take a second look at the example.
 
 <p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/3795544/" width="960" height="580" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
@@ -163,17 +167,19 @@
 
 <h2><a href="#2" name="2">#</a>Everyone is a Toolmaker</h2>
 
-<p>Now, I hope I haven’t been speaking in a way that only relates to those of you that consider yourself toolmakers, library authors, framework builders, and the like. But if I am, in a sense, maybe that’s okay. Because I believe at heart we are all toolmakers, if only for ourselves. You don’t have to have a repo on GitHub to look for ways to improve your process, to identify tedious tasks and design something that makes your work easier, more productive, or more fun.
+<p>I hope I haven’t been speaking in a way that only relates to those of you that consider yourself toolmakers, library authors, framework builders, and the like. But if I am, maybe that’s okay; I believe we are all toolmakers, if only for ourselves. You don’t have to be on GitHub to identify tedious tasks and design solutions that makes your process easier, more productive, or more fun. Building tools is simply the sign of a rational mind.
 
-<p>Broadly speaking, I think of examples an <b>extension of working knowledge</b>. A place to take some small idea that I’ve learned during my work, and isolate it, like an apothecary capturing some precious essence in a glass jar. Build enough examples and you have a wide repetoire of ideas to apply in any situation. And best of all, these ideas are inherently composable and customizable, not wrapped in a thick blanket of abstraction. Of course there is a role for abstraction, but designing good abstractions is extremely difficult. Examples, on the other hand, are easy, flexible, and disposable if you think of something better later. So even if you do want to make a formal abstraction, a good set of examples can help you design it more effectively.
+<p>Broadly speaking, I think of examples an <b>extension of working knowledge</b>. A place to take a small idea I’ve learned during my work, and isolate it, like an apothecary capturing some precious essence in a glass jar. Build enough examples and you have a wide repetoire of ideas to apply in any situation.
 
-<p>To illustrate my process, I’ll now share some examples that have come out of my work for The New York Times.
+<p>Best of all, these ideas are inherently composable and customizable, not wrapped in a thick blanket of abstraction. There is of course a role for abstraction, but designing a good abstraction is extremely difficult. Examples, on the other hand, are easy, flexible, and disposable if you think of something better later. Even if you do want formal abstraction, a good set of examples are essential for designing it more effectively.
 
-<p>[oscar network]
+<p>To illustrate my process, I’ll share some examples from my work at <i>The New York Times</i>.
 
-<p>This was a network graphic I made for the Oscars with Shan Carter and Alicia Desantis. These are all the current nominees for the six major awards: four acting awards, best director and best movie. The intent of the graphic was to show how interconnected the Hollywood A-list is, and how the most successful people at the top of the food chain really rack up all the awards and nominations. I mean, just the Spielberg–Kennedy duo worked on at least 70 films with Oscar nominations, which is crazy!
+<p class="slide"><a href="http://www.nytimes.com/interactive/2013/02/20/movies/among-the-oscar-contenders-a-host-of-connections.html" target="_blank"><img style="border:solid 1px #ddd;" src="oscar-network.png" width="960" height="587"></a>
 
-<p>[oscar network editor]
+<p>This was a network graphic for the Oscars I made with Shan Carter, Alicia DeSantis and Josh Keller. It shows the current nominees for the six major awards: four acting awards, best director and best movie. The intent of the graphic was to show how interconnected the Hollywood A-list is, and how the most successful people at the top of the food chain really rack up all the awards and nominations. I mean, just the Spielberg–Kennedy duo worked on at least 70 films with Oscar nominations, which is crazy!
+
+<p class="slide"><img style="border:solid 1px #ddd;" src="oscar-network-editor.png" width="960" height="515">
 
 <p>This network layout is static, but it was originally positioned by D3’s force layout, followed by some hand-tweaking to make the curved edges easier to follow (and prettier). This is one of the luxuries we have working with static datasets—we can incorporate hand-editing to improve the output of automated algorithms.
 
