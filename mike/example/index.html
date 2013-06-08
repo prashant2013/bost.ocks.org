@@ -111,25 +111,25 @@
 
 <p>So how do we address this flaw? We show applications that the feature enables. Preferrably, concrete examples that are representative of real-world usage.
 
-<p class="slide"><iframe style="border:none;" data-src="http://bl.ocks.org/mbostock/raw/5735623/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+<p class="slide"><iframe style="border:none;background:transparent;" data-src="http://bl.ocks.org/mbostock/raw/5735623/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5735623" target="_blank">bl.ocks.org/5735623</a></aside>
 
 <p>Here is Van der Grinten’s world projection. On the left is without adaptive resampling, and on the right is with. The adaptive resampling removes polygonal artifacts that are visible in Antarctica. These artifacts are caused by a cut in the Antarctica polygon along the date line, or antimeridian, at ±180° longitude. This cut extends from the coast of Antarctica at -180°, to the south pole and then back to +180°. With no intermediate points, you get a straight line when projected, which looks bad. But if we resample, we get the nice curve that we expect.
 
-<p class="slide"><iframe style="border:none;" data-src="http://bl.ocks.org/mbostock/raw/5735626/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+<p class="slide"><iframe style="border:none;background:transparent;" data-src="http://bl.ocks.org/mbostock/raw/5735626/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5735626" target="_blank">bl.ocks.org/5735626</a></aside>
 
 <p>Same problem with the Larrivée projection. It’s ugly unless you resample! Now you might object, saying, but these are obscure historical projections, surely I picked these to exaggerate the problem, and this doesn’t happen with more common projections. And you’d be partly correct; this doesn’t happen with every projection.
 
-<p class="slide"><iframe style="border:none;" data-src="http://bl.ocks.org/mbostock/raw/5735647/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+<p class="slide"><iframe style="border:none;background:transparent;" data-src="http://bl.ocks.org/mbostock/raw/5735647/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5735647" target="_blank">bl.ocks.org/5735647</a></aside>
 
-But it is common enough! And one of the worst cases is with Albers equal-area conic projection, a map projection that is frequently used in visualization because it preserves area. Here the distortion is large enough to intersect significant land masses, causing fill inversion. A disaster.
+<p>But it is common enough! And one of the worst cases is with Albers equal-area conic projection, a map projection that is frequently used in visualization because it preserves area. Here the distortion is large enough to intersect significant land masses, causing fill inversion. A disaster.
 
-<p class="slide"><iframe style="border:none;" data-src="http://bl.ocks.org/mbostock/raw/5735649/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+<p class="slide"><iframe style="border:none;background:transparent;" data-src="http://bl.ocks.org/mbostock/raw/5735649/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5735649" target="_blank">bl.ocks.org/5735649</a></aside>
 
@@ -141,15 +141,21 @@ But it is common enough! And one of the worst cases is with Albers equal-area co
 
 <p>One of these seemingly-reasonable alternatives is, again, the conventional solution: why don’t we just add more detail to Antarctica?
 
-<p>[rotating globe without antimeridian cutting]
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5735770/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5735770" target="_blank">bl.ocks.org/5735770</a></aside>
 
 <p>Cartographically speaking, Antarctica is special for two reasons: it crosses the antimeridian and it encompasses a pole. However, these special qualifications are only present in the normal aspect. If you rotate the sphere along longitude and latitude, suddenly any land mass can present this same challenge! If we ignore the problem of antimeridian cutting, then as soon as we rotate the globe then polygons can cross from one side to the other, causing these horrible artifacts. If you ever wondered why the normal aspect is so entrenched in cartography, it’s not just because of cultural imperialism. It’s also a tricky math problem!
 
-<p>[rotating globe with antimeridian cutting]
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/3788999/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/3788999" target="_blank">bl.ocks.org/3788999</a></aside>
 
 <p>D3 solves this problem by cutting along the antimeridian after rotation. So we don’t depend on precut (or presampled) input. It just works! This example looks like it’s demonstrating spherical rotation, and it is, but doing rotation point-by-point is not the hard part. Just as with projection, you have to go beyond points; you must treat polygons and lines as first-class primitives with rotation to get good results.
 
-<p>[philbrick interrupted sinu-mollweide]
+<p class="slide"><iframe style="border:none;background:transparent;" data-src="http://bl.ocks.org/mbostock/raw/4481520/" width="960" height="530" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/4481520" target="_blank">bl.ocks.org/4481520</a></aside>
 
 <p>I’ll end this series of examples with one of my favorite unusual projections. Designed by Allen Philbrick, this projection uses the sinusoidal projection for the southern hemisphere, and the Mollweide projection for the northern hemisphere. The southern hemisphere is interrupted—that is, cut into three lobes, and the northern hemisphere is likewise cut into two. This reduces distortion on land masses at the expense of the oceans. Now, I don’t know if there’s truly a practical modern use for this projection, but I like that my tools give me the expressivity to decide what to use. I like being free to use any projection and any aspect, without those being assumed by my tools and my data.
 
