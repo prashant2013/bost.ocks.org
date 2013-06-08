@@ -93,7 +93,7 @@
 
 <p>Scale-dependent metric…
 
-<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5732029/" width="960" height="600" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+<p class="slide"><iframe style="border:none;background:transparent;" data-src="http://bl.ocks.org/mbostock/raw/5732029/" width="960" height="600" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
 <aside><a href="http://bl.ocks.org/mbostock/5732029" target="_blank">bl.ocks.org/5732029</a></aside>
 
@@ -111,21 +111,29 @@
 
 <p>So how do we address this flaw? We show applications that the feature enables. Preferrably, concrete examples that are representative of real-world usage.
 
-<p>[van der grinten]
+<p class="slide"><iframe style="border:none;" data-src="http://bl.ocks.org/mbostock/raw/5735623/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5735623" target="_blank">bl.ocks.org/5735623</a></aside>
 
 <p>Here is Van der Grinten’s world projection. On the left is without adaptive resampling, and on the right is with. The adaptive resampling removes polygonal artifacts that are visible in Antarctica. These artifacts are caused by a cut in the Antarctica polygon along the date line, or antimeridian, at ±180° longitude. This cut extends from the coast of Antarctica at -180°, to the south pole and then back to +180°. With no intermediate points, you get a straight line when projected, which looks bad. But if we resample, we get the nice curve that we expect.
 
-<p>[larrivée]
+<p class="slide"><iframe style="border:none;" data-src="http://bl.ocks.org/mbostock/raw/5735626/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5735626" target="_blank">bl.ocks.org/5735626</a></aside>
 
 <p>Same problem with the Larrivée projection. It’s ugly unless you resample! Now you might object, saying, but these are obscure historical projections, surely I picked these to exaggerate the problem, and this doesn’t happen with more common projections. And you’d be partly correct; this doesn’t happen with every projection.
 
-<p>[albers without resampling]
+<p class="slide"><iframe style="border:none;" data-src="http://bl.ocks.org/mbostock/raw/5735647/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5735647" target="_blank">bl.ocks.org/5735647</a></aside>
 
 But it is common enough! And one of the worst cases is with Albers equal-area conic projection, a map projection that is frequently used in visualization because it preserves area. Here the distortion is large enough to intersect significant land masses, causing fill inversion. A disaster.
 
-<p>[albers with resampling]
+<p class="slide"><iframe style="border:none;" data-src="http://bl.ocks.org/mbostock/raw/5735649/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
 
-With Albers, and other conic projections, we need many many points of resampling because the Antarctica curve is so long. It extends all the way from the left edge to the right edge of the graph. Adaptive resampling compensates for the length of this curve automatically, adding the necessary number of points to achieve the desired rendering quality.
+<aside><a href="http://bl.ocks.org/mbostock/5735649" target="_blank">bl.ocks.org/5735649</a></aside>
+
+<p>With Albers, and other conic projections, we need many many points of resampling because the Antarctica curve is so long. It extends all the way from the left edge to the right edge of the graph. Adaptive resampling compensates for the length of this curve automatically, adding the necessary number of points to achieve the desired rendering quality.
 
 <p>So, by showing examples that demonstrate real-world applications of a feature, rather than just proving the existence of the feature, we’ve made a stronger argument. We’ve made it easier for the viewer to imagine incorporating this abstract idea into their own work.
 
