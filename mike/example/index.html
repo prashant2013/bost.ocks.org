@@ -175,51 +175,71 @@
 
 <p>To illustrate my process, I’ll share some examples from my work at <i>The New York Times</i>.
 
-<p class="slide"><a href="http://www.nytimes.com/interactive/2013/02/20/movies/among-the-oscar-contenders-a-host-of-connections.html" target="_blank"><img style="border:solid 1px #ddd;" src="oscar-network.png" width="960" height="587"></a>
+<p class="slide"><a href="http://www.nytimes.com/interactive/2013/02/20/movies/among-the-oscar-contenders-a-host-of-connections.html" target="_blank"><img style="border:solid 1px #ddd;" src="oscar-network-crop.png" width="960" height="300"></a>
+
+<aside><a href="http://www.nytimes.com/interactive/2013/02/20/movies/among-the-oscar-contenders-a-host-of-connections.html">Among the Oscar Contenders, a Host of Connections</a> by Mike Bostock, Shan Carter, Alicia DeSantis and Josh Keller</aside>
 
 <p>This was a network graphic for the Oscars I made with Shan Carter, Alicia DeSantis and Josh Keller. It shows the current nominees for the six major awards: four acting awards, best director and best movie. The intent of the graphic was to show how interconnected the Hollywood A-list is, and how the most successful people at the top of the food chain really rack up all the awards and nominations. I mean, just the Spielberg–Kennedy duo worked on at least 70 films with Oscar nominations, which is crazy!
 
-<p class="slide"><img style="border:solid 1px #ddd;" src="oscar-network-editor.png" width="960" height="515">
+<p class="slide"><img style="border:solid 1px #ddd;" src="oscar-network-editor-crop.png" width="960" height="300">
 
 <p>This network layout is static, but it was originally positioned by D3’s force layout, followed by some hand-tweaking to make the curved edges easier to follow (and prettier). This is one of the luxuries we have working with static datasets—we can incorporate hand-editing to improve the output of automated algorithms.
 
-<p>[draggable network ii]
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/4566102/" width="960" height="530" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/4566102" target="_blank">bl.ocks.org/4566102</a></aside>
 
 <p>TODO describe draggable network examples
 
-<p>[curved links]
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/4600693/" width="960" height="530" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/4600693" target="_blank">bl.ocks.org/4600693</a></aside>
 
 <p>But we wanted curved edges, first, and the force layouts that I had done previously all used straight links, as shown on the left. Using a trick I think I first learned from Ryan Alexander, you can create curved links by having a dummy node between each pair of linked nodes. You use this dummy node as a control point for a cubic Bézier. The dummy node isn’t visible, but it participates in the force simulation, has repelling charge and momentum, etc. And you get these lovely swoopy links that are prettier. It’s not a revolution in data visualization, certainly, but now there’s a small example you can use if you want prettier links—particularly useful if you want to hand-tweak those curves later.
 
-<p>[stroke dash interpolation]
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5649592/" width="960" height="530" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5649592" target="_blank">bl.ocks.org/5649592</a></aside>
 
 <p>Another technique we used in that graphic was to animate black lines emanating from the highlighted person or film on mouseover. The network is complicated, so a little animation helped to emphasize the part of the network under the mouse. Also, like the curved links, it’s just more fun. <b>I’m not opposed to joy as long as it doesn’t detract from the readability of the graphic.</b> Even better if it helps. But there is no API designed to do this, in SVG or canvas. There is an obvious solution, but is a difficult one: use math to cut a basis spline at any length along the path. Since math is hard, I thought of a clever hack using dashed strokes. Normally this feature of SVG is used for static dotted or dashed lines. But here we animate the stroke-dasharray property to create a single, long dash along the entire length of the line. We’re repurposing the API to do something unintended, but it works great and is easy!
 
-<p>[national convention word bubbles]
+<p class="slide"><a href="http://www.nytimes.com/interactive/2012/09/06/us/politics/convention-word-counts.html" target="_blank"><img style="border:solid 1px #ddd;" src="national-conventions.png" width="960" height="300"></a>
+
+<aside><a href="http://www.nytimes.com/interactive/2012/09/06/us/politics/convention-word-counts.html">At the National Conventions, the Words They Used</a> by Mike Bostock, Shan Carter and Matthew Ericson</aside>
 
 <p>These were word bubbles we made to compare the speeches of the Republican and Democratic national conventions. TODO describe excerpts, add bubbles
 
 <p>Each bubble is sized by the number of occurrences of that topic. But, more interestingly, the bubbles are positioned approximately according to their partisan bias. So democrats on the left mentioned "bin Laden" and "Middle class" much more often than the republicans, who instead favored terms like "unemployment" and "job creators". We also split the circles to show the relative proportion of Democrat and Republican mentions. It turns out this is actually a hard problem, splitting circles to keep the two sides proportional. You can’t split the circle linearly because the sides are smaller than the middle. OK, it’s not really a hard problem, but there’s actually no closed form solution. You have to use numeric integration to get an approximate answer.
 
-<p>[circle segment example]
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/3422480/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/3422480" target="_blank">bl.ocks.org/3422480</a></aside>
 
 <p>This example demonstrates our solution. It’s the same problem of filling a cylindrical container with water. For a given k, the fraction of the unit cylinder being filled, you compute the height of the water’s surface. So, in the rare event that you need a pie or a pizza into two like this, instead of the normal way, we’ve got you covered with this example.
 
-<p>[collision detection]
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/3231307/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/3231307" target="_blank">bl.ocks.org/3231307</a></aside>
 
 <p>And of course word bubbles require collision detection to prevent the bubbles from overlapping. I think you’ve all probably seen an example like this before so I won’t belabor you with an explanation, except to point out that one of the challenges is to detect collisions efficiently. Checking every pair of circles is far too slow. This example uses a quadtree to optimize intersection checks, so it’s fast. And you can just copy-and-paste the relevant code into yours if you need it.
 
-<p>[asia hexagonal cartogram]
+<p class="slide"><a href="http://www.nytimes.com/interactive/2013/04/08/business/global/asia-map.html" target="_blank"><img style="border:solid 1px #ddd;" src="asia-cartogram.png" width="960" height="300"></a>
+
+<aside><a href="http://www.nytimes.com/interactive/2013/04/08/business/global/asia-map.html">China Still Dominates, but Some Manufacturers Look Elsewhere</a> by Mike Bostock and Keith Bradsher</aside>
 
 <p>TODO ralph straumann
 
 <p>One last graphic before we move on. This is a hexagonal cartogram that compares the GDP of countries in Asia. Each hexagon represents $2.7 billion dollars in annual GDP. Color encodes rate of growth, so you can see how large, mature economies like Japan and South Korea are slowing down. China, of course, is both huge and growing rapidly.
 
-<p>[hexagon mesh]
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5249328/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5249328" target="_blank">bl.ocks.org/5249328</a></aside>
 
 <p>One of the challenges of this cartogram was taking a set of hexagons assigned to a given country, and computing the polygon that encompasses these hexagons. If I draw a bunch of red hexagons here, how do you determine the appropriate black outline polygon that surrounds them? Again, not an especially hard problem, but not a trivial one. You need an algorithm that can detect which sides of the hexagons are the exterior, and stitch those into a polygon. And detect holes! Fortunately, I had written a similar meshing algorithm for TopoJSON, so I just repurposed it here.
 
-<p>[color key example]
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/4573883/cef8acacfbb1cb8e3f3fa42c6698cca7fd8c37cc/" width="960" height="200" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/4573883" target="_blank">bl.ocks.org/4573883</a></aside>
 
 <p>TODO Link to ford's map
 
@@ -231,21 +251,29 @@
 
 <p>In this last section, I want to quickly share a sequence of examples done by multiple authors, and show how the rapid transmission of ideas enables creativity.
 
-<p>[osm vector tiles] TODO link to metro extracts
+<p class="slide"><iframe data-src="http://bl.ocks.org/mbostock/raw/5616813/" width="960" height="500" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+
+<aside><a href="http://bl.ocks.org/mbostock/5616813" target="_blank">bl.ocks.org/5616813</a></aside>
+
+<p>TODO link to metro extracts
 
 <p>Mike Migurski has been doing some great work making OpenStreetMap vector data more easily accessible. He started, I’m not sure when, ages ago, making parts of the OSM database available as convenient metro extracts for large cities, so that you don’t have to download the multi-gigabyte whole-planet file. Now he’s made a further leap forward by making the OpenStreetMap data accessible in tile format, so that you can easily request vector data for any slice of the world, without being limited to major cities. The adoption of vector tiles is exciting because it enables dynamic cartography in the browser—you have tremendous flexibility in how you display the data.
 
-<p>[nelson's vector rivers]
+<p class="slide"><a href="https://github.com/NelsonMinar/vector-river-map" target="_blank"><img src="nelson-rivers.png" style="border:solid 1px #ddd;" width="960" height="300"></a>
+
+<aside><a href="https://github.com/NelsonMinar/vector-river-map">Map of American Rivers</a> by Nelson Minar</aside>
 
 <p>Nelson Minar follows Mike’s work and wrote a tutorial for building vector tiles from NHDPlus, a massive dataset of all the rivers, streams, canals and waterways in the United States. Partly as a test that he was processing the data correctly, and partly inspired by Ben Fry’s All Streets, Nelson created this map of the entire U.S. I saw this, and thought it was beautiful, and since it was such a large dataset, a fun challenge to recreate. And naturally I had to fix that Mercator projection.
 
-<p>[albers vector rivers]
+<p class="slide"><a href="https://github.com/mbostock/us-rivers" target="_blank"><img src="mbostock-rivers.png" style="border:solid 1px #ddd;" width="960" height="600"></a>
 
 <p>So I followed Nelson’s tutorial and created my own version using the Albers projection.
 
-<p>[albers vector rivers detail]
+<p class="slide"><a href="https://github.com/mbostock/us-rivers" target="_blank"><img src="mbostock-rivers-crop.png" style="border:solid 1px #ddd;" width="960" height="540"></a>
 
-The detail in this data is really beautiful. It’s like an inverse topographic map. Instead of hill shading you have lines of varying thickness in the different basins. The vertical striations of the Appalachians are easily readable in this crop.
+<aside><a href="https://github.com/mbostock/us-rivers">U.S. Rivers</a></aside>
+
+<p>The detail in this data is really beautiful. It’s like an inverse topographic map. Instead of hill shading you have lines of varying thickness in the different basins. The vertical striations of the Appalachians are easily readable in this crop.
 
 <p>But remember this started with vector tiles. And the vector tiles are in the Mercator projection. It’s much harder to take Mercator tiles and reproject them to a different projection, because you don’t know which tiles are visible.
 
