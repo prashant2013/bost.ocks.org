@@ -10,7 +10,8 @@
 }
 
 .slide iframe {
-  border: solid 1px #ccc;
+  background: #fff;
+  border: solid 1px #ddd;
 }
 
 </style>
@@ -28,11 +29,11 @@
 
 <p>I am a big fan of examples. Not a surprise, right? If you follow me on <a href="https://twitter.com/mbostock">Twitter</a>, or my projects over the last few years (or asked D3 questions on Stack Overflow), you’ve likely seen some of my example visualizations, maps and explanations.
 
-<p>My love for examples is so deep that I created a website dedicated to sharing them: <a href="http://bl.ocks.org">bl.ocks.org</a> lets you quickly post code and share your example with a short URL. Your code is displayed below the example; it’s view source by default. And it’s backed by <a href="https://gist.github.com">GitHub Gist</a>, so examples have a git repository for version control, and are forkable, cloneable and commentable.
+<p>I use examples so often that I created <a href="http://bl.ocks.org">bl.ocks.org</a> to make it easier for me to share them. It lets you quickly post code and share examples with a short URL. Your code is displayed below, so it’s view source by default. And it’s backed by <a href="https://gist.github.com">GitHub Gist</a>, so examples have a git repository for version control, and are forkable, cloneable and commentable.
 
-<p>I initially conceived this talk as an excuse to show all my examples. But with more than 600, I’d have only 4.5 seconds per. And that would be overwhelming. So instead I’ve picked a few favorites that I hope you’ll enjoy. You should find this talk entertaining, even if it fails to be insightful.
+<p>I initially conceived this talk as an excuse to show all my examples. But with more than 600, I’d have only 4.5 seconds per slide. And that would be overwhelming. So instead I’ve picked a few favorites that I hope you’ll enjoy. You should find this talk entertaining, even if it fails to be insightful.
 
-<p>But this talk has a point, too. Examples are lightweight and informal. They can often be made in a few minutes. They lack the ceremony of polished graphics or official tools. Yet they are a powerful medium of communication, capable of expressing big ideas with immediate impact. And Eyeo is a unique opportunity for me to talk directly to all of you that are doing amazing things with code, data and visualization. So, <b>if I can accomplish one thing here, it should be to get you to share more examples</b>. In short, to share my love of examples with you.
+<p>This talk does have a point, though. Examples are lightweight and informal; they can often be made in a few minutes; they lack the ceremony of polished graphics or official tools. Yet they are a powerful medium of communication that is capable of expressing big ideas with immediate impact. And Eyeo is a unique opportunity for me to talk directly to all of you that are doing amazing things with code, data and visualization. So, if I can accomplish one thing here, it should be to get you to <b>share more examples</b>. In short, to share my love of examples with you.
 
 <h2><a href="#1" name="1">#</a>The Flawed Example</h2>
 
@@ -42,9 +43,9 @@
 
 <aside><a href="http://bl.ocks.org/mbostock/3795544" target="_blank">bl.ocks.org/3795544</a></aside>
 
-<p>This is an example I wrote to demonstrate a new feature in D3. The <a href="https://github.com/mbostock/d3/wiki/3.0">3.0 release</a> included major improvements to our geographic projection system, work that was done with my co-author, the brilliant <a href="http://jasondavies.com">Jason Davies</a>.
+<p>I wrote this example to demonstrate a new feature in D3. The <a href="https://github.com/mbostock/d3/wiki/3.0">3.0 release</a> included major improvements to our geographic projection system led by the brilliant <a href="http://jasondavies.com">Jason Davies</a>.
 
-<p>One challenge in map projection is that input geometry—coast lines, country borders and such—are defined as polygons. When polygons are projected from the sphere to the screen, the edges may no longer be straight lines due to distortion in the projection. And the fact that edges are not straight to begin with: spherical polygon edges are great arcs, not lines. So on the left you see what happens if you represent the equator as a polyline with a point every 90°. When projected point-by-point, the line appears broken because five points are not enough to produce a smooth curve.
+<p>One challenge in map projection is that input geometry—coast lines, country borders and such—are defined as polygons. When polygons are projected from the sphere to the screen, the edges may become curves due to distortion in the projection. And the fact that edges are not straight lines to begin with: spherical polygon edges are great arcs. The left shows what happens if you represent the equator as a polyline with a point every 90°. When projected point-by-point, the line appears broken because five points are not enough to produce a smooth curve.
 
 <p>The conventional fix is to use more points. The middle diagrams shows a point every 4° of longitude. As you can see, this is better. But if you look closely you can still see artifacts on the vertical lines where the distortion is so severe that even 4° is not enough! And you can see many points along the horizontal lines where there is little distortion; these points do not improve quality, but slow down rendering. So uniform resampling is inefficient and doesn’t guarantee great results.
 
@@ -109,6 +110,142 @@
 <p>I think that’s a cool algorithm. It’s neat, right? Particularly the symmetry with line simplification. But I was so excited to tell you how cool the algorithm was, I forgot to explain why it matters. The example illustrates what the feature does, but not why the feature exists. So the example only resonates for viewers that already understand the feature’s utility. <b>If you want your example to speak to people other than yourself, you have to explain why it matters.</b>
 
 <p>So how do we address this flaw? We show applications that the feature enables. Preferrably, concrete examples that are representative of real-world usage.
+
+<p>[van der grinten]
+
+<p>Here is Van der Grinten’s world projection. On the left is without adaptive resampling, and on the right is with. The adaptive resampling removes polygonal artifacts that are visible in Antarctica. These artifacts are caused by a cut in the Antarctica polygon along the date line, or antimeridian, at ±180° longitude. This cut extends from the coast of Antarctica at -180°, to the south pole and then back to +180°. With no intermediate points, you get a straight line when projected, which looks bad. But if we resample, we get the nice curve that we expect.
+
+<p>[larrivée]
+
+<p>Same problem with the Larrivée projection. It’s ugly unless you resample! Now you might object, saying, but these are obscure historical projections, surely I picked these to exaggerate the problem, and this doesn’t happen with more common projections. And you’d be partly correct; this doesn’t happen with every projection.
+
+<p>[albers without resampling]
+
+But it is common enough! And one of the worst cases is with Albers equal-area conic projection, a map projection that is frequently used in visualization because it preserves area. Here the distortion is large enough to intersect significant land masses, causing fill inversion. A disaster.
+
+<p>[albers with resampling]
+
+With Albers, and other conic projections, we need many many points of resampling because the Antarctica curve is so long. It extends all the way from the left edge to the right edge of the graph. Adaptive resampling compensates for the length of this curve automatically, adding the necessary number of points to achieve the desired rendering quality.
+
+<p>So, by showing examples that demonstrate real-world applications of a feature, rather than just proving the existence of the feature, we’ve made a stronger argument. We’ve made it easier for the viewer to imagine incorporating this abstract idea into their own work.
+
+<p>On the other hand, however, there is a risk when we only show a few sample applications. If these examples are not general enough, then the viewer might speculate alternative solutions. The examples are evidence, not proof; so we have to pick the right evidence to make a strong case.
+
+<p>One of these seemingly-reasonable alternatives is, again, the conventional solution: why don’t we just add more detail to Antarctica?
+
+<p>[rotating globe without antimeridian cutting]
+
+<p>Cartographically speaking, Antarctica is special for two reasons: it crosses the antimeridian and it encompasses a pole. However, these special qualifications are only present in the normal aspect. If you rotate the sphere along longitude and latitude, suddenly any land mass can present this same challenge! If we ignore the problem of antimeridian cutting, then as soon as we rotate the globe then polygons can cross from one side to the other, causing these horrible artifacts. If you ever wondered why the normal aspect is so entrenched in cartography, it’s not just because of cultural imperialism. It’s also a tricky math problem!
+
+<p>[rotating globe with antimeridian cutting]
+
+<p>D3 solves this problem by cutting along the antimeridian after rotation. So we don’t depend on precut (or presampled) input. It just works! This example looks like it’s demonstrating spherical rotation, and it is, but doing rotation point-by-point is not the hard part. Just as with projection, you have to go beyond points; you must treat polygons and lines as first-class primitives with rotation to get good results.
+
+<p>[philbrick interrupted sinu-mollweide]
+
+<p>I’ll end this series of examples with one of my favorite unusual projections. Designed by Allen Philbrick, this projection uses the sinusoidal projection for the southern hemisphere, and the Mollweide projection for the northern hemisphere. The southern hemisphere is interrupted—that is, cut into three lobes, and the northern hemisphere is likewise cut into two. This reduces distortion on land masses at the expense of the oceans. Now, I don’t know if there’s truly a practical modern use for this projection, but I like that my tools give me the expressivity to decide what to use. I like being free to use any projection and any aspect, without those being assumed by my tools and my data.
+
+<p>To sum up so far: examples are about demonstrating the potential value of ideas. Unlike a graphic that you might do for work, you don’t have to capture that value immediately. You just have to present an idea that has potential, in a way that is accessible to your audience. Of course visual tests and explanations are great too. But remember that your goal is to inspire your viewer. Make sure the leap from abstract idea to concrete value is a short one.
+
+<h2><a href="#2" name="2">#</a>Everyone is a Toolmaker</h2>
+
+<p>Now, I hope I haven’t been speaking in a way that only relates to those of you that consider yourself toolmakers, library authors, framework builders, and the like. But if I am, in a sense, maybe that’s okay. Because I believe at heart we are all toolmakers, if only for ourselves. You don’t have to have a repo on GitHub to look for ways to improve your process, to identify tedious tasks and design something that makes your work easier, more productive, or more fun.
+
+<p>Broadly speaking, I think of examples an <b>extension of working knowledge</b>. A place to take some small idea that I’ve learned during my work, and isolate it, like an apothecary capturing some precious essence in a glass jar. Build enough examples and you have a wide repetoire of ideas to apply in any situation. And best of all, these ideas are inherently composable and customizable, not wrapped in a thick blanket of abstraction. Of course there is a role for abstraction, but designing good abstractions is extremely difficult. Examples, on the other hand, are easy, flexible, and disposable if you think of something better later. So even if you do want to make a formal abstraction, a good set of examples can help you design it more effectively.
+
+<p>To illustrate my process, I’ll now share some examples that have come out of my work for The New York Times.
+
+<p>[oscar network]
+
+<p>This was a network graphic I made for the Oscars with Shan Carter and Alicia Desantis. These are all the current nominees for the six major awards: four acting awards, best director and best movie. The intent of the graphic was to show how interconnected the Hollywood A-list is, and how the most successful people at the top of the food chain really rack up all the awards and nominations. I mean, just the Spielberg–Kennedy duo worked on at least 70 films with Oscar nominations, which is crazy!
+
+<p>[oscar network editor]
+
+<p>This network layout is static, but it was originally positioned by D3’s force layout, followed by some hand-tweaking to make the curved edges easier to follow (and prettier). This is one of the luxuries we have working with static datasets—we can incorporate hand-editing to improve the output of automated algorithms.
+
+<p>[draggable network ii]
+
+<p>TODO describe draggable network examples
+
+<p>[curved links]
+
+<p>But we wanted curved edges, first, and the force layouts that I had done previously all used straight links, as shown on the left. Using a trick I think I first learned from Ryan Alexander, you can create curved links by having a dummy node between each pair of linked nodes. You use this dummy node as a control point for a cubic Bézier. The dummy node isn’t visible, but it participates in the force simulation, has repelling charge and momentum, etc. And you get these lovely swoopy links that are prettier. It’s not a revolution in data visualization, certainly, but now there’s a small example you can use if you want prettier links—particularly useful if you want to hand-tweak those curves later.
+
+<p>[stroke dash interpolation]
+
+<p>Another technique we used in that graphic was to animate black lines emanating from the highlighted person or film on mouseover. The network is complicated, so a little animation helped to emphasize the part of the network under the mouse. Also, like the curved links, it’s just more fun. <b>I’m not opposed to joy as long as it doesn’t detract from the readability of the graphic.</b> Even better if it helps. But there is no API designed to do this, in SVG or canvas. There is an obvious solution, but is a difficult one: use math to cut a basis spline at any length along the path. Since math is hard, I thought of a clever hack using dashed strokes. Normally this feature of SVG is used for static dotted or dashed lines. But here we animate the stroke-dasharray property to create a single, long dash along the entire length of the line. We’re repurposing the API to do something unintended, but it works great and is easy!
+
+<p>[national convention word bubbles]
+
+<p>These were word bubbles we made to compare the speeches of the Republican and Democratic national conventions. TODO describe excerpts, add bubbles
+
+<p>Each bubble is sized by the number of occurrences of that topic. But, more interestingly, the bubbles are positioned approximately according to their partisan bias. So democrats on the left mentioned "bin Laden" and "Middle class" much more often than the republicans, who instead favored terms like "unemployment" and "job creators". We also split the circles to show the relative proportion of Democrat and Republican mentions. It turns out this is actually a hard problem, splitting circles to keep the two sides proportional. You can’t split the circle linearly because the sides are smaller than the middle. OK, it’s not really a hard problem, but there’s actually no closed form solution. You have to use numeric integration to get an approximate answer.
+
+<p>[circle segment example]
+
+<p>This example demonstrates our solution. It’s the same problem of filling a cylindrical container with water. For a given k, the fraction of the unit cylinder being filled, you compute the height of the water’s surface. So, in the rare event that you need a pie or a pizza into two like this, instead of the normal way, we’ve got you covered with this example.
+
+<p>[collision detection]
+
+<p>And of course word bubbles require collision detection to prevent the bubbles from overlapping. I think you’ve all probably seen an example like this before so I won’t belabor you with an explanation, except to point out that one of the challenges is to detect collisions efficiently. Checking every pair of circles is far too slow. This example uses a quadtree to optimize intersection checks, so it’s fast. And you can just copy-and-paste the relevant code into yours if you need it.
+
+<p>[asia hexagonal cartogram]
+
+<p>TODO ralph straumann
+
+<p>One last graphic before we move on. This is a hexagonal cartogram that compares the GDP of countries in Asia. Each hexagon represents $2.7 billion dollars in annual GDP. Color encodes rate of growth, so you can see how large, mature economies like Japan and South Korea are slowing down. China, of course, is both huge and growing rapidly.
+
+<p>[hexagon mesh]
+
+<p>One of the challenges of this cartogram was taking a set of hexagons assigned to a given country, and computing the polygon that encompasses these hexagons. If I draw a bunch of red hexagons here, how do you determine the appropriate black outline polygon that surrounds them? Again, not an especially hard problem, but not a trivial one. You need an algorithm that can detect which sides of the hexagons are the exterior, and stitch those into a polygon. And detect holes! Fortunately, I had written a similar meshing algorithm for TopoJSON, so I just repurposed it here.
+
+<p>[color key example]
+
+<p>TODO Link to ford's map
+
+<p>Another reusable component from that graphic is the color key. I can’t take credit for this key, unfortunately. It was designed by Ford Fessenden for a map of police stops in New York, showing the use of force. It’s a lovely key because it reinforces the numbers—the percentage of stops that involved force—with position as well as color. The full range of the key goes from 0 to 100%. Very often designers use arbitrary breaks in color encodings to improve contrast; so, having a key like this is essential to rapid understanding. You can see whether the colors are regularly or irregularly spaced. D3 doesn’t have a color key component (at least not yet), so in the meantime this is a convenient example to show how to make one.
+
+<p>I showed you three graphics and six examples derived from those graphics. Some of the examples may be more useful, some may be just for fun. That’s fine. Not every example can be a winner. Examples are lightweight and informal. Just look for hidden gems of inspiration in your work, little things that might be repurposed. If you can think of ways to generalize it, then great! But there should be a low bar to sharing. Even if you decide not to publicly share your example, it’s useful to build a collection of simple patterns that you can employ in future work.
+
+<h2><a href="#3" name="3">#</a>Everything is an Example</h2>
+
+<p>In this last section, I want to quickly share a sequence of examples done by multiple authors, and show how the rapid transmission of ideas enables creativity.
+
+<p>[osm vector tiles] TODO link to metro extracts
+
+<p>Mike Migurski has been doing some great work making OpenStreetMap vector data more easily accessible. He started, I’m not sure when, ages ago, making parts of the OSM database available as convenient metro extracts for large cities, so that you don’t have to download the multi-gigabyte whole-planet file. Now he’s made a further leap forward by making the OpenStreetMap data accessible in tile format, so that you can easily request vector data for any slice of the world, without being limited to major cities. The adoption of vector tiles is exciting because it enables dynamic cartography in the browser—you have tremendous flexibility in how you display the data.
+
+<p>[nelson's vector rivers]
+
+<p>Nelson Minar follows Mike’s work and wrote a tutorial for building vector tiles from NHDPlus, a massive dataset of all the rivers, streams, canals and waterways in the United States. Partly as a test that he was processing the data correctly, and partly inspired by Ben Fry’s All Streets, Nelson created this map of the entire U.S. I saw this, and thought it was beautiful, and since it was such a large dataset, a fun challenge to recreate. And naturally I had to fix that Mercator projection.
+
+<p>[albers vector rivers]
+
+<p>So I followed Nelson’s tutorial and created my own version using the Albers projection.
+
+<p>[albers vector rivers detail]
+
+The detail in this data is really beautiful. It’s like an inverse topographic map. Instead of hill shading you have lines of varying thickness in the different basins. The vertical striations of the Appalachians are easily readable in this crop.
+
+<p>But remember this started with vector tiles. And the vector tiles are in the Mercator projection. It’s much harder to take Mercator tiles and reproject them to a different projection, because you don’t know which tiles are visible.
+
+<p>[jason davies reprojected tiles]
+
+<p>Hard problems like this are Jason Davies’ bread and butter. Jason saw the earlier examples I just showed you, and set to work figuring out how to determine which tiles would be visible in an arbitrary projection. He created this visual demonstration of the algorithm. The red tiles are the ones that are visible, and as I zoom in and out, you can see it rapidly recalculates the set of needed tiles. The amazing thing is that this works with any projection—it just recursively traverses the tile quadtree and does intersection checks with the viewport. So it’s more than fast enough!
+
+<p>[jason davies reprojected raster tiles / satellite]
+
+<p>Naturally Jason didn’t stop there. He employed this algorithm with the satellite projection, and adapting an earlier example of raster reprojection, was able to reproject raster tiles in any projection! This is a beautiful view of the Eastern seaboard from four hundred miles above the Earth, using standard MapBox terrain tiles.
+
+<p>[jason davies reprojected raster tiles / black marble]
+
+<p>You can use any tile source, of course! So here’s the same thing, now done by Bill Morris, using NASA’s black marble imagery to show the Earth at night.
+
+<p>These examples, taken collectively, are so impressive because they demonstrate how to adapt existing tile data sources (which are all in Mercator) to any map projection. So now we have <b>the convenience of tiles without the tyranny of Mercator</b>. These are truly exciting times for web cartography. And I believe this advancement was at least partly fostered by rapidly sharing ideas through little examples—not some manifesto thrown down from a tower. Just planting a seed and watching it grow.
+
+<p>Well, here we are at the end. I hope you enjoyed the tour. I endeavored to present a wide gamut, to illustrate the variety of roles that examples can serve. Whether it’s a visual explanation, a demonstration of capabilities, or an idea conveniently packaged for reuse. Above all, I hope that the next time you’re hard at work, you <b>look for those little gems you can share with others</b>. I can’t wait to see the examples you come up with.
+
+<p>Thank you.
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
